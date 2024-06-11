@@ -15,8 +15,8 @@ const App = () => {
   return (
     <Router>
       <Layout>
-         <Landing/>
-        { 0 &&
+         {/* <Landing/> */}
+        { 1 &&
    <Routes>
    <Route path="/" element={<Home />} />
    <Route path="/login" element={<Login />} />
