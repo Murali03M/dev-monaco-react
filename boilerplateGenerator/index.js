@@ -66,5 +66,12 @@ function generateFullBoilerplate(generatorFilePath) {
   console.log("Boilerplate code generated successfully!");
 }
 
-generatePartialBoilerplate(process.env.GENERATOR_FILE_PATH ?? "");
-generateFullBoilerplate(process.env.GENERATOR_FILE_PATH ?? "");
+const generatorFilePaths = process.env.GENERATOR_FILE_PATHS?.split(' ') ?? [];
+
+generatorFilePaths.forEach((filePath) => {
+    // Ensure we only run the generator on directories, not individual files
+    if (fs.lstatSync(path.join(__dirname, 'problems', filePath)).isDirectory()) {
+        generatePartialBoilerplate(path.join('problems', filePath));
+        generateFullBoilerplate(path.join('problems', filePath));
+    }
+});
