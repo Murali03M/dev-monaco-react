@@ -27,8 +27,25 @@ jobs:
     - name: Determine changed directories
       id: changes
       run: |
-        changed_dirs=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} problems | cut -d/ -f2 | sort | uniq)
+        changed_dirs=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- 'problems/**' | awk -F/ '{print $1"/"$2}' | sort | uniq)
         echo "changed_dirs=$changed_dirs" >> $GITHUB_ENV
+
+    - name: Check if changes are empty
+      run: |
+        if [ -z "${{ env.changed_dirs }}" ]; then
+          echo "No changes detected in 'problems' directory. Exiting."
+          exit 0
+        fi
+
+    - name: Print current working directory
+      run: pwd
+
+    - name: List files in problems directory
+      run: |
+        for dir in ${{ env.changed_dirs }}; do
+          echo "Listing files in directory: $dir"
+          ls -la $dir
+        done
 
     - name: Run boilerplate generator
       env:
@@ -36,18 +53,24 @@ jobs:
       run: node ./index.js
       working-directory: ./boilerplateGenerator
 
-    - name: Add changes to Git
+    - name: Configure Git
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add .
+      working-directory: ./boilerplateGenerator
+
+    - name: Add changes to Git
+      run: git add .
       working-directory: ./boilerplateGenerator
 
     - name: Commit changes
       run: |
-        git commit -m "Add boilerplate code for problems: ${{ env.changed_dirs }}"
+        if git diff --cached --quiet; then
+          echo "No changes to commit."
+        else
+          git commit -m "Add boilerplate code for problems: ${{ env.changed_dirs }}"
+        fi
       working-directory: ./boilerplateGenerator
-      if: success()
 
     - name: Push changes
       run: git push
