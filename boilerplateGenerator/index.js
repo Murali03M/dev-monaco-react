@@ -69,9 +69,7 @@ function generateFullBoilerplate(generatorFilePath) {
 const generatorFilePaths = process.env.GENERATOR_FILE_PATHS?.split(' ') ?? [];
 
 generatorFilePaths.forEach((filePath) => {
-    // Ensure we only run the generator on directories, not individual files
-    
-        generatePartialBoilerplate(path.join('problems', filePath));
-        generateFullBoilerplate(path.join('problems', filePath));
-    }
-);
+    const fullPath = path.join(__dirname, '..', 'problems', filePath);
+    generatePartialBoilerplate(fullPath);
+    generateFullBoilerplate(fullPath);
+});
