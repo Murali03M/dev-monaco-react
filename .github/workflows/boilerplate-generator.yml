@@ -1,10 +1,9 @@
 name: Boilerplate Generator
 
-# Controls when the workflow will run
 on:
   push:
     paths:
-      - 'problems/**'  # Monitor changes in the problems directory
+      - 'problems/**'
 
 jobs:
   run-boilerplate-generator:
@@ -13,6 +12,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch the entire history to ensure all commits are available
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
@@ -30,7 +31,7 @@ jobs:
       id: find-changes
       run: |
         # Find directories with changes
-        changed_dirs=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} problems | cut -d/ -f2 | sort | uniq)
+        changed_dirs=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- problems | cut -d/ -f2 | sort | uniq)
         echo "changed_dirs=$changed_dirs" >> $GITHUB_ENV
 
     - name: Run boilerplate generator
