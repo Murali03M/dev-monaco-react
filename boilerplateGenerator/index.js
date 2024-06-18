@@ -71,6 +71,6 @@ const generatorFilePaths = process.env.GENERATOR_FILE_PATHS?.split(' ') ?? [];
 generatorFilePaths.forEach((filePath) => {
     console.log("murealiskdfnbkhds",filePath);
    
-    generatePartialBoilerplate(fullPath);
-    generateFullBoilerplate(fullPath);
+    generatePartialBoilerplate(filePath);
+    generateFullBoilerplate(filePath);
 });
