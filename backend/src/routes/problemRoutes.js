@@ -5,7 +5,7 @@ import {
     getChallengeById,
     updateChallenge,
     deleteChallenge
-} from '../controllers/challengeController.js';
+} from '../controllers/problemController.js';
 
 const router = express.Router();
 

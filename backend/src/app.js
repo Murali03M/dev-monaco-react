@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import  authRoutes  from './routes/authRoutes.js';
-import challengeRoutes from './routes/challengeRoutes.js';
+import challengeRoutes from './routes/problemRoutes.js';
 import judge0Routes from './routes/judge0Routes.js'
 
 const app = express();

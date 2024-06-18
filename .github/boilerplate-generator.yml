@@ -1,0 +1,36 @@
+name: Boilerplate Generator
+
+# Controls when the workflow will run
+on:
+  push:
+    paths:
+      - 'problems/**'  
+
+jobs:
+  run-boilerplate-generator:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Find changed directories
+      id: find-changes
+      run: |
+        # Find directories with changes
+        changed_dirs=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} problems | cut -d/ -f2 | sort | uniq)
+        echo "changed_dirs=$changed_dirs" >> $GITHUB_ENV
+
+    - name: Run boilerplate generator
+      if: env.changed_dirs != ''
+      env:
+        GENERATOR_FILE_PATHS: ${{ env.changed_dirs }}
+      run: node ./boilerplateGenerator/index.js

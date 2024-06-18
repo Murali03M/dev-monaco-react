@@ -2,8 +2,11 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../../prisma/prismaClient.js';
 
+
 export const registerUser = async (req, res) => {
+
   const { email, password, name, skillLevel, interests } = req.body;
+
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -61,3 +64,9 @@ export const getUserById = async (req, res) => {
         res.status(500).json({ error: 'Error getting user by ID' });
     }
 };
+
+
+
+
+
+

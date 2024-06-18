@@ -9,3 +9,6 @@ router.post('/login', loginUser);
 router.get('/user/:id', authMiddleware, getUserById);
 
 export default router;
+
+
+
