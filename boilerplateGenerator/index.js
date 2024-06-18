@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { ProblemDefinitionParser } from './ProblemDefinitionGenerator';
-import { FullProblemDefinitionParser } from './FullProblemDefinitionGenerator';
+import { ProblemDefinitionParser } from './ProblemDefinitionParser';
+import { FullProblemDefinitionParser } from './FullProblemDefinitionParser';
 
 function generatePartialBoilerplate(generatorFilePath) {
   const inputFilePath = path.join(process.cwd(), generatorFilePath, 'Structure.md');
