@@ -9,8 +9,8 @@ const __dirname = path.dirname(__filename);
 
 
 function generatePartialBoilerplate(generatorFilePath) {
-  const inputFilePath = path.join( '..',generatorFilePath, "Structure.md");
-  const boilerplatePath = path.join('..', generatorFilePath, "boilerplate");
+  const inputFilePath = path.join(__dirname, generatorFilePath, "Structure.md");
+  const boilerplatePath = path.join(__dirname, generatorFilePath, "boilerplate");
 
   // Read the input file
   const input = fs.readFileSync(inputFilePath, "utf-8");
@@ -38,8 +38,8 @@ function generatePartialBoilerplate(generatorFilePath) {
 }
 
 function generateFullBoilerplate(generatorFilePath) {
-  const inputFilePath = path.join('..', generatorFilePath, "Structure.md");
-  const boilerplatePath = path.join('..', generatorFilePath, "boilerplate-full");
+  const inputFilePath = path.join(__dirname, generatorFilePath, "Structure.md");
+  const boilerplatePath = path.join(__dirname, generatorFilePath, "boilerplate-full");
 
   // Read the input file
   const input = fs.readFileSync(inputFilePath, "utf-8");
@@ -69,8 +69,8 @@ function generateFullBoilerplate(generatorFilePath) {
 const generatorFilePaths = process.env.GENERATOR_FILE_PATHS?.split(' ') ?? [];
 
 generatorFilePaths.forEach((filePath) => {
-    console.log(filePath);
-    const fullPath = path.join('..', 'problems', filePath);
+    console.log("murealiskdfnbkhds",filePath);
+   
     generatePartialBoilerplate(fullPath);
     generateFullBoilerplate(fullPath);
 });
