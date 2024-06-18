@@ -16,6 +16,7 @@ Output
 3
 ```
 
+
 #### Test case 2
 
 Input
