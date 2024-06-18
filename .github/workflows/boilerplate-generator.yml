@@ -19,8 +19,12 @@ jobs:
       with:
         node-version: '20'
 
+    - name: Change directory to boilerplateGenerator
+      run: cd boilerplateGenerator
+
     - name: Install dependencies
       run: npm install
+      working-directory: ./boilerplateGenerator
 
     - name: Find changed directories
       id: find-changes
@@ -33,4 +37,5 @@ jobs:
       if: env.changed_dirs != ''
       env:
         GENERATOR_FILE_PATHS: ${{ env.changed_dirs }}
-      run: node ./boilerplateGenerator/index.js
+      run: node ./index.js
+      working-directory: ./boilerplateGenerator
