@@ -27,14 +27,16 @@ jobs:
     - name: Determine changed directories
       id: changes
       run: |
-        # Get the previous and current commit SHA
-        previous_sha="${{ github.event.before }}"
-        current_sha="${{ github.sha }}"
+       # Get the previous and current commit SHA
+          if [ "${github.ref}" == "refs/heads/main" ]; then
+          previous_sha=$(git rev-parse HEAD~1)
+          current_sha=$(git rev-parse HEAD)
 
-        # Find changed directories within 'problems'
-        changed_dirs=$(git diff --name-only $previous_sha $current_sha -- 'problems/**' | awk -F/ '{print $2}' | sort | uniq)
-        echo "changed_dirs=$changed_dirs" >> $GITHUB_ENV
-        echo "Changed directories: $changed_dirs"
+       # Find changed directories within 'problems'
+            changed_dirs=$(git diff --name-only $previous_sha $current_sha -- 'problems/**' | awk -F/ '{print $2}' | sort | uniq)
+            echo "changed_dirs=$changed_dirs" >> $GITHUB_ENV
+       echo "Changed directories: $changed_dirs"
+         fi
 
     - name: Check if changes are empty
       run: |
@@ -59,7 +61,7 @@ jobs:
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
     - name: Add changes to Git
-      run: git add.
+      run: git add .
 
     - name: Commit changes
       run: |
