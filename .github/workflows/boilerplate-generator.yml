@@ -44,7 +44,7 @@ jobs:
       run: |
         for dir in ${{ env.changed_dirs }}; do
           echo "Generating boilerplate code for problems/$dir"
-          node ./index.js problems/$dir
+          node ./index.js 
         done
       working-directory: ./boilerplateGenerator
 

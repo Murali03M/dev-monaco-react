@@ -7,6 +7,7 @@ import { FullProblemDefinitionParser } from "./FullProblemDefinitionParser.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
 function generatePartialBoilerplate(generatorFilePath) {
   const inputFilePath = path.join(__dirname, generatorFilePath, "Structure.md");
   const boilerplatePath = path.join(__dirname, generatorFilePath, "boilerplate");
@@ -65,7 +66,7 @@ function generateFullBoilerPlate(generatorFilePath) {
   console.log("Boilerplate code generated successfully!");
 }
 
-const generatorFilePath = process.argv[2] || "";
-console.log("Generat", generatorFilePath);
-generatePartialBoilerplate("../"+ generatorFilePath);
-generateFullBoilerPlate("../"+generatorFilePath);
+const generatorFilePath = process.env.GENERATOR_FILE_PATH || "";
+
+generatePartialBoilerplate(generatorFilePath);
+generateFullBoilerPlate(generatorFilePath);
