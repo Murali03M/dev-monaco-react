@@ -27,8 +27,9 @@ jobs:
     - name: Determine changed directories
       id: changes
       run: |
-        changed_dirs=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- 'problems/**' | awk -F/ '{print $1"/"$2}' | sort | uniq)
+        changed_dirs=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- 'problems/**' | awk -F/ '{print $2}' | sort | uniq)
         echo "changed_dirs=$changed_dirs" >> $GITHUB_ENV
+        echo "Changed directories: $changed_dirs"
 
     - name: Check if changes are empty
       run: |
@@ -43,8 +44,8 @@ jobs:
     - name: List files in problems directory
       run: |
         for dir in ${{ env.changed_dirs }}; do
-          echo "Listing files in directory: $dir"
-          ls -la $dir
+          echo "Listing files in directory: problems/$dir"
+          ls -la problems/$dir
         done
 
     - name: Run boilerplate generator
@@ -57,11 +58,9 @@ jobs:
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-      working-directory: ./boilerplateGenerator
 
     - name: Add changes to Git
       run: git add .
-      working-directory: ./boilerplateGenerator
 
     - name: Commit changes
       run: |
@@ -70,9 +69,7 @@ jobs:
         else
           git commit -m "Add boilerplate code for problems: ${{ env.changed_dirs }}"
         fi
-      working-directory: ./boilerplateGenerator
 
     - name: Push changes
       run: git push
-      working-directory: ./boilerplateGenerator
       if: success()
