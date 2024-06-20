@@ -66,6 +66,6 @@ function generateFullBoilerPlate(generatorFilePath) {
 }
 
 const generatorFilePath = process.argv[2] || "";
-
+console.log("Generat", generatorFilePath);
 generatePartialBoilerplate(generatorFilePath);
 generateFullBoilerPlate(generatorFilePath);
