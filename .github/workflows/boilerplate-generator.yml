@@ -22,17 +22,14 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: ./boilerplateGenerator
+      working-directory : ./boilerplateGenerator
 
     - name: Determine changed directories
       id: changes
       run: |
-        # Get the previous and current commit SHA
-        previous_sha="${{ github.event.before }}"
-        current_sha="${{ github.sha }}"
-
-        # Find changed directories within 'problems'
-        changed_dirs=$(git diff --name-only $previous_sha $current_sha -- 'problems/**' | awk -F/ '{print $2}' | sort | uniq)
+        # Get the last commit that modified the 'problems' directory
+        last_commit=$(git log -1 --format=%H -- problems/)
+        changed_dirs=$(git diff --name-only $last_commit~1 $last_commit -- 'problems/**' | awk -F/ '{print $2}' | sort | uniq)
         echo "changed_dirs=$changed_dirs" >> $GITHUB_ENV
         echo "Changed directories: $changed_dirs"
 
@@ -56,13 +53,7 @@ jobs:
     - name: Run boilerplate generator
       env:
         GENERATOR_FILE_PATHS: ${{ env.changed_dirs }}
-      run: |
-        generatorFilePaths=(${GENERATOR_FILE_PATHS})
-        for filePath in "${generatorFilePaths[@]}"; do
-          if [ -n "$filePath" ]; then
-            node ./index.js "$filePath"
-          fi
-        done
+      run: node./index.js
       working-directory: ./boilerplateGenerator
 
     - name: Configure Git
