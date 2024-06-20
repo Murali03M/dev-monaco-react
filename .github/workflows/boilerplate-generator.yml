@@ -43,23 +43,13 @@ jobs:
           exit 0
         fi
 
-    - name: Print current working directory
-      run: pwd
-
-    - name: List files in problems directory
-      run: |
-        for dir in ${{ env.changed_dirs }}; do
-          echo "Listing files in directory: problems/$dir"
-          ls -la problems/$dir
-        done
-
     - name: Run boilerplate generator
       env:
-        GENERATOR_FILE_PATHS: ${{ env.changed_dirs }}
+        GENERATOR_FILE_PATH: ${{ env.changed_dirs }}
       run: |
-        for dir in $GENERATOR_FILE_PATHS; do
-          problem_name=$(basename "$dir")
-          node ./index.js "$dir/$problem_name"
+        for dir in ${{ env.changed_dirs }}; do
+          echo "Generating boilerplate code for problems/$dir"
+          node./index.js problems/$dir
         done
       working-directory: ./boilerplateGenerator
 
@@ -69,7 +59,7 @@ jobs:
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
     - name: Add changes to Git
-      run: git add .
+      run: git add.
 
     - name: Commit changes
       run: |

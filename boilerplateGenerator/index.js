@@ -7,10 +7,9 @@ import { FullProblemDefinitionParser } from "./FullProblemDefinitionParser.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 function generatePartialBoilerplate(generatorFilePath) {
-  const inputFilePath = path.join(process.cwd(), generatorFilePath, "Structure.md");
-  const boilerplatePath = path.join(process.cwd(), generatorFilePath, "boilerplate");
+  const inputFilePath = path.join(__dirname, generatorFilePath, "Structure.md");
+  const boilerplatePath = path.join(__dirname, generatorFilePath, "boilerplate");
 
   // Read the input file
   const input = fs.readFileSync(inputFilePath, "utf-8");
@@ -37,9 +36,9 @@ function generatePartialBoilerplate(generatorFilePath) {
   console.log("Boilerplate code generated successfully!");
 }
 
-function generateFullBoilerplate(generatorFilePath) {
-  const inputFilePath = path.join(process.cwd(), generatorFilePath, "Structure.md");
-  const boilerplatePath = path.join(process.cwd(), generatorFilePath, "boilerplate-full");
+function generateFullBoilerPlate(generatorFilePath) {
+  const inputFilePath = path.join(__dirname, generatorFilePath, "Structure.md");
+  const boilerplatePath = path.join(__dirname, generatorFilePath, "boilerplate-full");
 
   // Read the input file
   const input = fs.readFileSync(inputFilePath, "utf-8");
@@ -66,8 +65,7 @@ function generateFullBoilerplate(generatorFilePath) {
   console.log("Boilerplate code generated successfully!");
 }
 
-if (process.argv.length > 2) {
-  const filePath = process.argv[2];
-  generatePartialBoilerplate(filePath);
-  generateFullBoilerplate(filePath);
-}
+const generatorFilePath = process.argv[2] || "";
+
+generatePartialBoilerplate(generatorFilePath);
+generateFullBoilerPlate(generatorFilePath);
