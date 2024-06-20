@@ -27,7 +27,12 @@ jobs:
     - name: Determine changed directories
       id: changes
       run: |
-        changed_dirs=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- 'problems/**' | awk -F/ '{print $2}' | sort | uniq)
+        # Get the previous and current commit SHA
+        previous_sha="${{ github.event.before }}"
+        current_sha="${{ github.sha }}"
+
+        # Find changed directories within 'problems'
+        changed_dirs=$(git diff --name-only $previous_sha $current_sha -- 'problems/**' | awk -F/ '{print $2}' | sort | uniq)
         echo "changed_dirs=$changed_dirs" >> $GITHUB_ENV
         echo "Changed directories: $changed_dirs"
 
