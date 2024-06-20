@@ -67,7 +67,7 @@ function generateFullBoilerPlate(generatorFilePath) {
 }
 const problemName = process.argv[2] || "";
 
-const generatorFilePath =path.join("..","problemName")
+const generatorFilePath =path.join("..","problems",problemName)
 
 generatePartialBoilerplate(generatorFilePath);
 generateFullBoilerPlate(generatorFilePath);
