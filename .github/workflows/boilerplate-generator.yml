@@ -55,8 +55,14 @@ jobs:
 
     - name: Run boilerplate generator
       env:
-        GENERATOR_FILE_PATHS: ${{ env.changed_dirs | join(' ')}}
-      run: node ./index.js
+        GENERATOR_FILE_PATHS: ${{ env.changed_dirs }}
+      run: |
+        generatorFilePaths=(${GENERATOR_FILE_PATHS})
+        for filePath in "${generatorFilePaths[@]}"; do
+          if [ -n "$filePath" ]; then
+            node ./index.js "$filePath"
+          fi
+        done
       working-directory: ./boilerplateGenerator
 
     - name: Configure Git
@@ -64,13 +70,17 @@ jobs:
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-    - name: Add and commit changes
+    - name: Add changes to Git
+      run: git add .
+
+    - name: Commit changes
       run: |
-        git add .
-        git commit -m "Add boilerplate code for problems: ${{ env.changed_dirs }}"
+        if git diff --cached --quiet; then
+          echo "No changes to commit."
+        else
+          git commit -m "Add boilerplate code for problems: ${{ env.changed_dirs }}"
+        fi
 
     - name: Push changes
       run: git push
-      env:
-        PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       if: success()
