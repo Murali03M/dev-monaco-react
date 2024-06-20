@@ -65,8 +65,9 @@ function generateFullBoilerPlate(generatorFilePath) {
 
   console.log("Boilerplate code generated successfully!");
 }
+const problemName = process.argv[2] || "";
 
-const generatorFilePath = process.env.GENERATOR_FILE_PATH || "";
+const generatorFilePath =path.join("..","problemName")
 
 generatePartialBoilerplate(generatorFilePath);
 generateFullBoilerPlate(generatorFilePath);
