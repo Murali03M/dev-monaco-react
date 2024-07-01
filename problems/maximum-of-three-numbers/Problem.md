@@ -1,13 +1,14 @@
-## Two sum
+## Maximum of Three Numbers
 
-Find the sum of two given elements. Both the numbers will always be 0 or postiive.
+Find the maximum of three given numbers.
+
 
 #### Test case 1
 
 Input
 
 ```
-1, 2
+1, 2, 3
 ```
 
 Output
@@ -21,11 +22,12 @@ Output
 Input
 
 ```
-1, 100
+10, 5, 7
+
 ```
 
 Output
 
 ```
-100
+10
 ```
