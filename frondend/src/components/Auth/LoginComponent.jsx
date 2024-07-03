@@ -70,14 +70,14 @@ const LoginComponent = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-slate-900 text-white py-2 px-4 rounded-lg hover:bg-slate-600 focus:outline-none focus:ring focus:border-blue-300"
+            className="w-full bg-slate-900 dark:bg-slate-200 dark:text-slate-900 py-2 px-4 rounded-lg dark:hover:bg-slate-700 hover:bg-slate-600 hover:text-white  dark:hover:text-white focus:outline-none focus:ring focus:border-blue-300"
           >
             Login
           </button>
         </form>
         <div className="mt-4 text-center">
           <p className="text-gray-700 dark:text-gray-300">
-            Don't have an account? <Link to="/register" className="text-white hover:underline">Sign up</Link>
+            Don't have an account? <Link to="/register" className="dark:text-white  hover:underline">Sign up</Link>
           </p>
         </div>
  

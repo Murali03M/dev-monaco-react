@@ -1,16 +1,18 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu } from '@headlessui/react';
-
+import ThemeProvider from '../ThemeProvider/ThemeProvider';
 
 const Navbar = () => {
 
   const navigate = useNavigate();
+
+  // eslint-disable-next-line no-undef
   const token = localStorage.getItem('token');
 
   const logOutHandler = () => {
+    // eslint-disable-next-line no-undef
     localStorage.removeItem('token');
     navigate('/login');
-
   }
 
   return (
@@ -19,23 +21,24 @@ const Navbar = () => {
         <div className="relative flex items-center justify-between h-16">
           <div className="flex-1 flex items-center justify-start">
             <div className="flex-shrink-0">
-              <Link to='/home' className="text-xl font-bold text-gray-900 dark:text-white">DEV</Link>
+              <Link to='/' className="text-xl font-bold text-gray-900 dark:text-white">DEV</Link>
             </div>
           </div>
           <div className="flex items-center space-x-4">
+            <ThemeProvider />
             <Menu as="div" className="relative">
               <div>
                 {token ? (
                   <Menu.Button className="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     <span className="sr-only">Open user menu</span>
-                    <UserIcon className="h-6 w-6 text-gray-900 dark:text-white" />
+                    <UserIcon className="h-6 w-6 text-black dark:text-white" />
                   </Menu.Button>
                 ) : (
                   <Link
                     to="/login"
-                    className="text-white hover:text-white border border-white hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
+                    className="dark:text-white hover:text-white border border-gray-900 dark:border-white hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
                   >
-                   Login
+                    Login
                   </Link>
                 )}
               </div>
@@ -85,7 +88,7 @@ function UserIcon() {
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
-      className="h-9 w-9 text-white"
+      className="h-9 w-9 dark:text-white text-black "
     >
       <path
         strokeLinecap="round"

@@ -59,12 +59,12 @@ async function main(problemSlug, problemTitle) {
         where: {
           problemId_languageId: {
             problemId: problem.id,
-            languageId: languageInfo.id,
+            // languageId: languageInfo.name,
           },
         },
         create: {
           problemId: problem.id,
-          languageId: languageInfo.id,
+          languageId: languageInfo.name,
           code,
         },
         update: {

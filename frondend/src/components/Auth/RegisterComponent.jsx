@@ -16,7 +16,7 @@ const RegisterComponent = () => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  const availableTags = ['JavaScript', 'Python', 'React', 'Node.js', 'GraphQL']; // Example tags
+  const availableTags = ['Array', 'String', 'Map', 'LinkedList', 'Db']; 
 
   const registerSchema = z.object({
     email: z.string().email({ message: 'Invalid email address' }),
@@ -42,7 +42,7 @@ const RegisterComponent = () => {
       navigate('/login');
     } catch (error) {
       if (error instanceof z.ZodError) {
-        setErrors(error.formErrors.fieldErrors);
+        notify.error(error.formErrors.fieldErrors);
       } else {
         notify.error('Registration failed');
       }
@@ -129,11 +129,9 @@ const RegisterComponent = () => {
                   addInterest(interestInput);
                 }
               }}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${
-                errors.interests ? 'border-red-500' : ''
-              }`}
+              className='w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 '
             />
-            {errors.interests && <p className="text-red-500 text-sm">{errors.interests}</p>}
+
             <div className="mt-2">
               {availableTags
                 .filter((tag) => tag.toLowerCase().includes(interestInput.toLowerCase()) && !interests.includes(tag))
@@ -167,13 +165,13 @@ const RegisterComponent = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-slate-900 text-white py-2 px-4 rounded-lg hover:bg-slate-600 focus:outline-none focus:ring focus:border-blue-300"
+            className="w-full bg-slate-900 dark:bg-slate-200 dark:text-slate-900 py-2 px-4 rounded-lg dark:hover:bg-slate-700 hover:bg-slate-600 hover:text-white  dark:hover:text-white focus:outline-none focus:ring focus:border-blue-300"
           >
             Register
           </button>
         </form>
         <div className="mt-4 text-center">
-          <p className="text-gray-700 dark:text-gray-300">Already have an account? <Link to="/login" className="text-white hover:underline">Sign in</Link></p>
+          <p className="text-gray-700 dark:text-gray-300">Already have an account? <Link to="/login" className="dark:text-white hover:underline">Sign in</Link></p>
         </div>
    
       </div>

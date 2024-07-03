@@ -20,7 +20,7 @@ export const registerUser = async (req, res) => {
     },
   });
 
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
   res.status(201).send({ user, token });
 };
@@ -36,7 +36,7 @@ export const loginUser = async (req, res) => {
       return res.status(400).send({ error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
     res.send({ user, token });
 
   } catch (error) {

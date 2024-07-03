@@ -2,7 +2,7 @@
 
 const Quote1= () => {
     return (
-        <div className='bg-slate-200 h-screen flex flex-col justify-center'>
+        <div className='bg-slate-200 dark:bg-slate-500 h-screen flex flex-col justify-center'>
             <div className='flex justify-center'>
                 <div className='text-center max-w-md font-bold text-3xl'>
                     "Technology is best when it brings people together." 

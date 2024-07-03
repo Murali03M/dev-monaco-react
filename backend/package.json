@@ -7,8 +7,8 @@
     "dev": "nodemon server.js",
     "build": "prisma generate",
     "start": "node server.js",
-    "db:seed":"prisma db seed",
-    "db:question":"node prisma/ProblemSeed.js"
+    "db:seed": "prisma db seed",
+    "db:question": "node prisma/ProblemSeed.js"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
@@ -24,6 +24,7 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.7.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

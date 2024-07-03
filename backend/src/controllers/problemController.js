@@ -1,13 +1,19 @@
 import prisma from '../../prisma/prismaClient.js';
 import fs from "fs"
+import { ObjectId } from "mongodb";
+import path from "path"
+import { fileURLToPath } from 'url';
+
 
 const LANGUAGE_MAPPING = {
     js: { judge0: 63, name: "Javascript" },
     cpp: { judge0: 54, name: "C++",},
     rs: { judge0: 73, name: "Rust" },
   };
-  
-  const MOUNT_PATH = process.env.MOUNT_PATH || "../problems";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const MOUNT_PATH = path.join(__dirname, '../../../problems')
   
   function promisifedReadFile(path) {
     return new Promise((resolve, reject) => {
@@ -64,12 +70,12 @@ export const createChallenge = async (req, res) => {
       where: {
         problemId_languageId: {
           problemId: problem.id,
-          languageId: languageInfo.id,
+          languageId: languageInfo.name,
         },
       },
       create: {
         problemId: problem.id,
-        languageId: languageInfo.id,
+        languageId: languageInfo.name,
         code,
       },
       update: {
@@ -90,8 +96,8 @@ export const createChallenge = async (req, res) => {
 // Get all challenges
 export const getChallenges = async (req, res) => {
   try {
-      const challenges = await prisma.challenge.findMany();
-      res.status(200).json(challenges);
+      const problems = await prisma.problem.findMany();
+      res.status(200).json(problems);
   } catch (error) {
       console.error('Error retrieving challenges:', error);
       res.status(500).json({ error: 'Error retrieving challenges' });
@@ -101,9 +107,15 @@ export const getChallenges = async (req, res) => {
 // Get a challenge by ID
 export const getChallengeById = async (req, res) => {
   const { id } = req.params;
-
+  console.log(id);
   try {
-      const challenge = await prisma.challenge.findUnique({ where: { id: String(id) } });
+    const challenge = await prisma.problem.findUnique({
+      where: {
+        id: new ObjectId(String(id))
+        
+      },
+      include: { defaultCode: true }
+    });
       if (!challenge) {
           return res.status(404).json({ error: 'Challenge not found' });
       }
