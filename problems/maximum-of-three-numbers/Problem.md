@@ -8,6 +8,7 @@ Find the maximum of three given numbers.
 Input
 
 ```
+
 1, 2, 3
 ```
 
