@@ -6,6 +6,8 @@ import ChallengeSubmitBar from './ChallengeSubmitBar';
 import { BACKEND_URL } from '../../config';
 
 const ChallengeDetail = () => {
+
+ 
   const { id } = useParams();
   const [challenge, setChallenge] = useState(null);
 

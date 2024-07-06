@@ -15,8 +15,8 @@ const App = () => {
   return (
     <Router>
       <Layout>
-         {/* <Landing/> */}
-        { 1 &&
+   
+  
    <Routes>
    <Route path="/" element={<Home />} />
    <Route path="/login" element={<Login />} />
@@ -25,9 +25,7 @@ const App = () => {
    <Route path="/challenges/:id" element={<ChallengeDetail />} />
    <Route path="/create-challenge" element={<CreateChallenge />} />
    <Route path="/profile" element={<Profile />} />
- </Routes>
-        }
-     
+  </Routes>
       </Layout>
     </Router>
   );

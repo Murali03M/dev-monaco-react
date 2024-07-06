@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { BACKEND_URL } from '../../config';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -7,8 +8,10 @@ const Profile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
+
+        // eslint-disable-next-line no-undef
         const token = localStorage.getItem('token');
-        const response = await axios.get('/api/users/me', {
+        const response = await axios.get(`${BACKEND_URL}/api/v1/user`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -22,9 +25,9 @@ const Profile = () => {
     fetchUser();
   }, []);
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
+  // if (!user) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <div className="p-8">
