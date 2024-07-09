@@ -1,7 +1,11 @@
-import { memoryUsage } from 'process';
 import prisma from '../../prisma/prismaClient.js';
 import fs from "fs"
 import getProblemDetails from '../utils/problems.js';
+import { createClient } from 'redis';
+
+const redisClient = createClient({ url: process.env.REDIS_URL || 'redis://localhost:6379' });
+await redisClient.connect();
+
 
 const LANGUAGE_MAPPING = {
     js: { judge0: 63, name: "Javascript" },
@@ -12,51 +16,56 @@ const LANGUAGE_MAPPING = {
 const MOUNT_PATH = "../problems";
   
   
-
 export const createSubmission = async (req, res) => {
-      
-   
     try {
-        console.log(req.body);
-        const { problemId, language, code } = req.body;
-        console.log("languge in submission", language);
-        const userId = req.userId;
-
-        const dbProblem = await prisma.problem.findUnique({
-            where: {
-                id: problemId
-            }
-        });
-
-        if (!dbProblem) {
-            return res.status(404).json({ error: 'Problem not found' });
+      console.log(req.body);
+      const { problemId, language, code } = req.body;
+      console.log("language in submission", language);
+      const userId = req.userId;
+  
+      const dbProblem = await prisma.problem.findUnique({
+        where: {
+          id: problemId
         }
-
-        console.log("Calling getProblemDetails with slug:", dbProblem.slug, "and languageId:", language);
+      });
+  
+      if (!dbProblem) {
+        return res.status(404).json({ error: 'Problem not found' });
+      }
+  
+      console.log("Calling getProblemDetails with slug:", dbProblem.slug, "and languageId:", language);
       const problem = await getProblemDetails({ slug: dbProblem.slug, languageId: language });
-
-        problem.fullBoilerplateCode = problem.fullBoilerplateCode.replace(
-            "##USER_CODE_HERE##",
-            code
-        );
-
-        const submission = await prisma.submission.create({
-            data: {
-                userId: userId,
-                problemId: problemId,
-                languageId: language, 
-                code: code,
-                fullCode: problem.fullBoilerplateCode,
-                status: "PENDING",
-            }
-        });
-
-        res.status(200).json({ message: 'Submission created successfully', submission });
+  
+      problem.fullBoilerplateCode = problem.fullBoilerplateCode.replace(
+        "##USER_CODE_HERE##",
+        code
+      );
+  
+      const submission = await prisma.submission.create({
+        data: {
+          userId: userId,
+          problemId: problemId,
+          languageId: language,
+          code: code,
+          fullCode: problem.fullBoilerplateCode,
+          status: "PENDING",
+        }
+      });
+  
+      // Publish the submission to Redis
+      await redisClient.publish('submissions', JSON.stringify({
+        submissionId: submission.id,
+        code: code,
+        language: language,
+      }));
+  
+      res.status(200).json({ message: 'Submission created successfully', submission });
     } catch (error) {
-        console.error("Error while submitting:", error); 
-        res.status(500).json({ error: 'An error occurred while creating the submission' });
+      console.error("Error while submitting:", error);
+      res.status(500).json({ error: 'An error occurred while creating the submission' });
     }
-};
+  };
+  
 
 
 // Get all challenges
