@@ -7,7 +7,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
-// const JUDGE0_API_URL = 'http://judge0.chetechs.com/submissions';
+const JUDGE0_API_URL = process.env.JUDGE0_API_URL || 'https://judge0.chetechs.com/';
+const CALLBACK_URL = process.env.JUDGE0_CALLBACK_URL || 'https://ec16-2a04-4a43-8f0f-f842-3c63-ef13-9a35-e037.ngrok-free.app/api/v1/submission-callback';
+;
 
 const redisClient = createClient({ url: REDIS_URL });
 
@@ -22,61 +24,61 @@ const LANGUAGE_MAPPING = {
 };
 
 const main = async () => {
-      await redisClient.connect();
+  await redisClient.connect();
 
   console.log('Worker started, waiting for tasks...');
 
   redisClient.subscribe('submissions', async (message) => {
-      const submissionData = JSON.parse(message);
-      
-      console.log(submissionData);
-      const { submissionId, code, language } = submissionData;
-      
-
+    console.log(message);
+    const submissionData = JSON.parse(message);
+    const { submissionId, code, language, inputs, outputs } = submissionData;
+   
     try {
       const languageId = LANGUAGE_MAPPING[language];
+      console.log(languageId);
       if (!languageId) {
         throw new Error(`Unsupported language: ${language}`);
+
       }
+ 
 
-    //   const response = await axios.post(
-    //     `${JUDGE0_API_URL}?base64_encoded=false&wait=true`,
-    //     {
-    //       source_code: code,
-    //       language_id: languageId,
-    //       stdin: '',
-    //     },
-    //     {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //     }
-        //   );
-        
+  const response = await axios.post(
+    `${JUDGE0_API_URL}/submissions/batch?base64_encoded=false`,
+    {
+      submissions: inputs.map((input, index) => ({
+        language_id: languageId,
+        source_code: code,
+        stdin: input,
+        expected_output: outputs[index],
+        callback_url:CALLBACK_URL
+      })),
+    },
+  );
+     console.log(response);
+      const tokens = response.data.map(res => res.token);
+      console.log("token",tokens);
+      await Promise.all(
+        tokens.map((token, index) => 
+          prisma.testCase.updateMany({
+            where: { submissionId, index },
+            data: { judge0TrackingId: token }
+          })
+        )
+      );
 
-
-        // const result = response.data;
-        
-
-
-    //   await prisma.submission.update({
-    //     where: { id: submissionId },
-    //     data: {
-    //       status: 'COMPLETED',
-    //       result: JSON.stringify(result),
-    //     },
-    //   });
+      await prisma.submission.update({
+        where: { id: submissionId },
+        data: { status: 'PENDING' }
+      });
 
       console.log(`Submission ${submissionId} processed successfully`);
     } catch (error) {
       console.error('Error processing submission:', error);
-    //   await prisma.submission.update({
-    //     where: { id: submissionId },
-    //     data: {
-    //       status: 'FAILED',
-    //       error: error.message,
-    //     },
-    //   });
+
+      await prisma.submission.update({
+        where: { id: submissionId },
+        data: { status: 'REJECTED' }
+      });
     }
   });
 };

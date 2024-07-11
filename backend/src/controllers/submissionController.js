@@ -16,7 +16,7 @@ const LANGUAGE_MAPPING = {
 const MOUNT_PATH = "../problems";
   
   
-export const createSubmission = async (req, res) => {
+export  const createSubmission = async (req, res) => {
     try {
       console.log(req.body);
       const { problemId, language, code } = req.body;
@@ -51,12 +51,25 @@ export const createSubmission = async (req, res) => {
           status: "PENDING",
         }
       });
+        
+        await prisma.testCase.createMany({
+            data: problem.inputs.map((input, index)=> ({
+                submissionId: submission.id,
+                status: "PENDING",
+                index,
+                judge0TrackingId: ''
+     
+            }))
+      })
   
       // Publish the submission to Redis
       await redisClient.publish('submissions', JSON.stringify({
         submissionId: submission.id,
-        code: code,
+        code: problem.fullBoilerplateCode,
         language: language,
+        inputs: problem.inputs,
+        outputs: problem.outputs
+        
       }));
   
       res.status(200).json({ message: 'Submission created successfully', submission });
@@ -97,6 +110,47 @@ export const getSubmissionById = async (req, res) => {
       res.status(500).json({ error: 'Error retrieving challenge' });
   }
 };
+
+export const getSubmissionByUserId = async (req, res) => {
+  const userId =req.userId
+
+  try {
+      const submission = await prisma.submission.findMany({
+          where: { userId: userId },
+          
+      });
+      if (!submission) {
+          return res.status(404).json({ message: 'No submission found' });
+      }
+
+      res.status(200).json(submission);
+  } catch (error) {
+      console.error('Error retrieving challenge:', error);
+      res.status(500).json({ error: 'Error retrieving challenge' });
+  }
+};
+// Get a submissions by submission id 
+export const getSubmission = async (req, res) => {
+  const { id } = req.params;
+  console.log(`Received request for submission with id: ${id}`);
+
+  try {
+    const submission = await prisma.submission.findUnique({
+      where: { id: String(id) },
+      include:{ testcases:true}
+    });
+
+    if (!submission) {
+      return res.status(404).json("No submission found");
+    }
+  console.log("mndbfhksdjbs jshdfvfdhjsfvjsd",submission);
+    res.status(200).json(submission);
+  } catch (error) {
+    console.error('Error retrieving challenge:', error);
+    res.status(500).json({ error: 'Error retrieving challenge' });
+  }
+};
+
 
 // Update a challenge
 export const updateSubmissions= async (req, res) => {

@@ -1,12 +1,11 @@
 import express from 'express';
 
 import authMiddleware from '../middleware/authMiddleware.js';
-
-import { getUserById } from '../controllers/userController.js';
+import { submissionCallback } from '../controllers/callbackController.js';
 
 const router = express.Router();
 
-router.get('/user',authMiddleware,getUserById);
+router.put('/submission-callback',submissionCallback);
 
 
 export default router;

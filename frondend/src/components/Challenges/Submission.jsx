@@ -21,8 +21,8 @@ export function Submissions({challenge}) {
   useEffect(() => {
     const fetchChallenge = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/v1/submission/${challenge?.id}`);
-         
+        const response = await axios.get(`${BACKEND_URL}/api/v1/submissions/${challenge?.id}`);
+         console.log(response,"success");
 
         setSubmission(response.data);
       } catch (error) {
