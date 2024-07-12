@@ -22,7 +22,7 @@ export const registerUser = async (req, res) => {
 
   const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-  res.status(201).send({ user, token });
+  res.status(201).send({ user, token,expiresIn:process.env.JWT_EXPIRATION_SECONDS });
 };
 
 export const loginUser = async (req, res) => {
@@ -37,7 +37,7 @@ export const loginUser = async (req, res) => {
     }
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    res.send({ user, token });
+    res.send({ user, token,expiresIn:process.env.JWT_EXPIRATION_SECONDS });
 
   } catch (error) {
     console.error('Error logging in user:', error);

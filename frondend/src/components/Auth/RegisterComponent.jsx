@@ -5,7 +5,6 @@ import { z } from 'zod';
 import { BACKEND_URL } from '../../config';
 import { notify } from '../NotificationProvider/NotificationUtils';
 
-
 const RegisterComponent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,10 +12,10 @@ const RegisterComponent = () => {
   const [skillLevel, setSkillLevel] = useState('');
   const [interests, setInterests] = useState([]);
   const [interestInput, setInterestInput] = useState('');
-  const [errors, setErrors] = useState({});
+
   const navigate = useNavigate();
 
-  const availableTags = ['Array', 'String', 'Map', 'LinkedList', 'Db']; 
+  const availableTags = ['Array', 'String', 'Map', 'LinkedList', 'Db'];
 
   const registerSchema = z.object({
     email: z.string().email({ message: 'Invalid email address' }),
@@ -42,7 +41,7 @@ const RegisterComponent = () => {
       navigate('/login');
     } catch (error) {
       if (error instanceof z.ZodError) {
-        notify.error(error.formErrors.fieldErrors);
+        error.errors.forEach(err => notify.error(err.message));
       } else {
         notify.error('Registration failed');
       }
@@ -50,7 +49,7 @@ const RegisterComponent = () => {
   };
 
   const addInterest = (interest) => {
-    if (!interests.includes(interest)) {
+    if (!interests.includes(interest) && interest) {
       setInterests([...interests, interest]);
     }
     setInterestInput('');
@@ -71,11 +70,8 @@ const RegisterComponent = () => {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${
-                errors.name ? 'border-red-500' : ''
-              }`}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
             />
-            {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 dark:text-gray-300">Email</label>
@@ -83,11 +79,8 @@ const RegisterComponent = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${
-                errors.email ? 'border-red-500' : ''
-              }`}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
             />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 dark:text-gray-300">Password</label>
@@ -95,27 +88,21 @@ const RegisterComponent = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${
-                errors.password ? 'border-red-500' : ''
-              }`}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
             />
-            {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 dark:text-gray-300">Skill Level</label>
             <select
               value={skillLevel}
               onChange={(e) => setSkillLevel(e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${
-                errors.skillLevel ? 'border-red-500' : ''
-              }`}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
             >
               <option value="">Select your skill level</option>
               <option value="BEGINNER">Beginner</option>
               <option value="INTERMEDIATE">Intermediate</option>
               <option value="ADVANCED">Advanced</option>
             </select>
-            {errors.skillLevel && <p className="text-red-500 text-sm">{errors.skillLevel}</p>}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 dark:text-gray-300">Interests</label>
@@ -129,9 +116,8 @@ const RegisterComponent = () => {
                   addInterest(interestInput);
                 }
               }}
-              className='w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 '
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
             />
-
             <div className="mt-2">
               {availableTags
                 .filter((tag) => tag.toLowerCase().includes(interestInput.toLowerCase()) && !interests.includes(tag))
@@ -165,15 +151,15 @@ const RegisterComponent = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-slate-900 dark:bg-slate-200 dark:text-slate-900 py-2 px-4 rounded-lg dark:hover:bg-slate-700 hover:bg-slate-600 hover:text-white  dark:hover:text-white focus:outline-none focus:ring focus:border-blue-300"
-          >
+            className="w-full bg-slate-900 dark:bg-slate-200 dark:text-slate-900 py-2 px-4 rounded-lg dark:hover:bg-slate-700 hover:bg-slate-600 hover:text-white dark:hover:text-white focus:outline-none focus:ring focus:border-blue-300 text-white">
             Register
           </button>
         </form>
         <div className="mt-4 text-center">
-          <p className="text-gray-700 dark:text-gray-300">Already have an account? <Link to="/login" className="dark:text-white hover:underline">Sign in</Link></p>
+          <p className="text-gray-700 dark:text-gray-300">
+            Already have an account? <Link to="/login" className="dark:text-white hover:underline">Sign in</Link>
+          </p>
         </div>
-   
       </div>
     </div>
   );

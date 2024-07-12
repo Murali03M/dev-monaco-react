@@ -1,29 +1,55 @@
-
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import Home from './pages/Home';
-
 import ChallengeList from './components/Challenges/ChallengeList';
 import ChallengeDetail from './components/Challenges/ChallengeDetail';
 import CreateChallenge from './components/Challenges/CreateChallenge';
 import Profile from './components/User/Profile';
 import Register from './pages/Register';
 import Login from './pages/Login';
-import Landing from './components/Editor/CodeEditorLanding';
+import ProtectedRoute from './components/Protect/ProtectedRoute';
 
 const App = () => {
   return (
     <Router>
       <Layout>
-   <Routes>
-   <Route path="/" element={<Home />} />
-   <Route path="/login" element={<Login />} />
-   <Route path="/register" element={<Register />} />
-   <Route path="/challenges" element={<ChallengeList />} />
-   <Route path="/challenges/:id" element={<ChallengeDetail />} />
-   <Route path="/create-challenge" element={<CreateChallenge />} />
-   <Route path="/profile" element={<Profile />} />
-  </Routes>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/challenges"
+            element={
+              <ProtectedRoute>
+                <ChallengeList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/challenges/:id"
+            element={
+              <ProtectedRoute>
+                <ChallengeDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-challenge"
+            element={
+              <ProtectedRoute>
+                <CreateChallenge />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
       </Layout>
     </Router>
   );
