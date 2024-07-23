@@ -1,6 +1,6 @@
-## Maximum of Three Numbers
+## Reverse String
 
-Find the maximum of three given numbers.
+Reverse the given string.
 
 
 #### Test case 1
@@ -8,14 +8,13 @@ Find the maximum of three given numbers.
 Input
 
 ```
-
-1, 2, 3
+hello
 ```
 
 Output
 
 ```
-3
+olleh
 ```
 
 #### Test case 2
@@ -23,12 +22,11 @@ Output
 Input
 
 ```
-10, 5, 7
-
+world
 ```
 
 Output
 
 ```
-22
+dlrow
 ```
