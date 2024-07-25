@@ -85,18 +85,20 @@ const ChallengeCard = ({ challenge }) => {
         <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{challenge.title}</h3>
       </div>
       <div className="p-4 bg-gray-50 dark:bg-gray-700">
-        <div className="flex justify-between items-center">
-          <span className={`text-sm font-semibold ${challenge.category === 'EASY' ? 'text-green-500' : challenge.category === 'MEDIUM' ? 'text-yellow-500' : 'text-red-500'}`}>
-            {challenge.difficulty}
+       
+            <div className="flex justify-between items-center">
+            <span className={`text-sm font-semibold ${challenge.category === 'EASY' ? 'text-green-500' : challenge.category === 'MEDIUM' ? 'text-yellow-500' : 'text-red-500'}`}>
+              {challenge.difficulty}
           </span>
-          {/* <div className="flex space-x-2">
-            {challenge.tags.map((tag, index) => (
-              <span key={index} className="inline-block bg-gray-200 dark:bg-gray-600 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                #{tag}
-              </span>
-            ))}
-          </div> */}
-        </div>
+          {challenge.tag &&
+            <div className="flex space-x-2">
+              {challenge.tag.map((tag, index) => (
+                <span key={index} className="inline-block bg-gray-200 dark:bg-gray-600 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  #{tag}
+                </span>
+              ))}
+            </div>}
+          </div>
         <div className="mt-4">
           <Link to={`/challenges/${challenge.id}`} className="text-blue-500 hover:underline">
             View Challenge

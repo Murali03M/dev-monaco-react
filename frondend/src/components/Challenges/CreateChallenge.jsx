@@ -84,43 +84,7 @@ const CreateChallenge = () => {
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
             ></textarea>
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300">Test Cases</label>
-            {testCases.map((testCase, index) => (
-              <div key={index} className="mb-2">
-                <div className="flex space-x-2 mb-2">
-                  <input
-                    type="text"
-                    value={testCase.input}
-                    onChange={(e) => handleTestCaseChange(index, 'input', e.target.value)}
-                    placeholder="Input"
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-                  />
-                  <input
-                    type="text"
-                    value={testCase.output}
-                    onChange={(e) => handleTestCaseChange(index, 'output', e.target.value)}
-                    placeholder="Output"
-                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleRemoveTestCase(index)}
-                  className="bg-red-500 text-white py-1 px-2 rounded-lg hover:bg-red-700 focus:outline-none focus:ring focus:border-red-300"
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={handleAddTestCase}
-              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
-            >
-              Add Test Case
-            </button>
-          </div>
+
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"

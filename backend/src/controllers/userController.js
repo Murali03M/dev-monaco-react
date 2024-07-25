@@ -68,6 +68,68 @@ export const getUserById = async (req, res) => {
 
 
 
+export const updateUser = async (req, res) => {
+  const userId = req.userId;
+
+  const { email, password, name, skillLevel, interests } = req.body;
+
+  const updateData = {
+    email,
+    name,
+    skillLevel,
+    interests,
+  };
+
+  if (password) {
+    updateData.password = await bcrypt.hash(password, 10);
+  }
+
+  try {
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data:updateData
+    })
+    
+    res.status(201).json({ message:"updated successfully" });
+      
+  } catch (error) {
+    
+    res.status(500).send({ error: 'Internal server error' });
+      
+    }
+}
+
+
+export const resetPassword = async (req, res) => {
+
+  console.log("welcome");
+  const { email, password } =req.body;
+  try {
+
+    let user = await prisma.user.findFirst({
+      where:{email:email}
+    })
+    console.log("userdfgdfg",user);
+    if (user)
+    {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user = await prisma.user.update({
+        where: { email: email },
+        data:{ password:hashedPassword }
+      })
+     
+      res.status(201).send({message:"Password updated"})
+
+      
+    }
+    
+    
+  } catch (error) {
+      res.status(500).send({ error: error.message });
+  }
+
+}
+
 
 
 

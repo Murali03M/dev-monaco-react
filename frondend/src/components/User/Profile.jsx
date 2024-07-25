@@ -119,6 +119,7 @@ const Profile = () => {
 
         {/* Submissions Table */}
         {submissions.length > 0 ? (
+          <div>
           <Card className="h-full w-full overflow-scroll">
             <table className="w-full min-w-max table-auto text-left">
               <thead>
@@ -168,9 +169,11 @@ const Profile = () => {
                 ))}
               </tbody>
             </table>
-          </Card>
+            </Card>
+            </div>
         ) : (
-          <Card className="h-full w-full overflow-scroll animate-pulse">
+            <div>
+                <Card className="h-full w-full overflow-scroll animate-pulse">
             <table className="w-full min-w-max table-auto text-left">
               <thead>
                 <tr>
@@ -194,6 +197,8 @@ const Profile = () => {
               </tbody>
             </table>
           </Card>
+              </div>
+        
         )}
       </div>
     </div>

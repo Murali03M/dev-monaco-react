@@ -29,7 +29,7 @@ const MOUNT_PATH = path.join(__dirname, '../../../problems')
 
 export const createChallenge = async (req, res) => {
     try {
-        const { problemSlug, problemTitle, difficulty } = req.body;
+        const { problemSlug, problemTitle, difficulty, tag } = req.body;
     
         const problemStatement = await promisifedReadFile(
           `${MOUNT_PATH}/${problemSlug}/Problem.md`
@@ -43,7 +43,8 @@ export const createChallenge = async (req, res) => {
             title: problemTitle,
             slug: problemSlug,
             description: problemStatement,
-            difficulty:difficulty
+            difficulty: difficulty,
+            tag:tag
           },
           update: {
             description: problemStatement,

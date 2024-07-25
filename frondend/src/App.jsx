@@ -8,15 +8,19 @@ import Profile from './components/User/Profile';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import ProtectedRoute from './components/Protect/ProtectedRoute';
+import Settings from './components/User/Settings';
+import ResetPassword from './components/Auth/ResetPassword';
 
 const App = () => {
   return (
     <Router>
       <Layout>
+     
         <Routes>
-          <Route path="/" element={<Home />} />
+           <Route path="/" element={<Home />} /> 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/resetPasssword" element={<ResetPassword />} />
           <Route
             path="/challenges"
             element={
@@ -38,6 +42,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <CreateChallenge />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
               </ProtectedRoute>
             }
           />

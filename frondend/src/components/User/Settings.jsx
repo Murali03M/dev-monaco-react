@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { z } from 'zod';
 import { BACKEND_URL } from '../../config';
 import { notify } from '../NotificationProvider/NotificationUtils';
 
-const RegisterComponent = () => {
+const Settings = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
   const [skillLevel, setSkillLevel] = useState('');
   const [interests, setInterests] = useState([]);
@@ -19,36 +20,62 @@ const RegisterComponent = () => {
 
   const registerSchema = z.object({
     email: z.string().email({ message: 'Invalid email address' }),
-    password: z.string().min(6, { message: 'Password must be at least 6 characters long' }),
     name: z.string().min(1, { message: 'Name is required' }),
     skillLevel: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED'], { message: 'Select a valid skill level' }),
     interests: z.array(z.string()).nonempty({ message: 'At least one interest is required' }),
   });
+    
+    const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+          const response = await axios.get(`${BACKEND_URL}/api/v1/auth/getuser`, {
+              headers: {
+                Authorization: 'Bearer ' + token
+            }
+        });
+        const { email, name, skillLevel, interests } = response.data;
+        setEmail(email);
+        setName(name);
+        setSkillLevel(skillLevel);
+        setInterests(interests);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const result = registerSchema.safeParse({ email, password, name, skillLevel, interests });
-      if (!result.success)
-      {
-        result.error.errors.forEach(err => notify.error(err.message));
-        return;
-        }
-      const response = await axios.post(`${BACKEND_URL}/api/v1/auth/register`, {
-        email,
-        password,
-        name,
-        skillLevel,
-        interests,
-      });
+      registerSchema.parse({ email, confirmPassword, name, skillLevel, interests });
+
+      const updateData = {};
+      if (email) updateData.email = email;
+      if (name) updateData.name = name;
+      if (skillLevel) updateData.skillLevel = skillLevel;
+      if (interests) updateData.interests = interests;
+
+        const response = await axios.patch(`${BACKEND_URL}/api/v1/auth/updateuser`, updateData,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+          }
+      );
       notify.success(response.data.message);
-      navigate('/login');
+      navigate('/profile');
     } catch (error) {
       if (error instanceof z.ZodError) {
-        error.errors.forEach(err => notify.error(err.message));
+          error.errors.forEach(err => notify.error(err.message));
+          
       } else {
-        notify.error('Registration failed');
+          notify.error('Update failed');
+          
       }
     }
   };
@@ -65,9 +92,9 @@ const RegisterComponent = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 w-full">
       <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Register</h2>
+        <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Update Details</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 dark:text-gray-300">Name</label>
@@ -84,15 +111,6 @@ const RegisterComponent = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
             />
           </div>
@@ -157,12 +175,12 @@ const RegisterComponent = () => {
           <button
             type="submit"
             className="w-full bg-slate-900 dark:bg-slate-200 dark:text-slate-900 py-2 px-4 rounded-lg dark:hover:bg-slate-700 hover:bg-slate-600 hover:text-white dark:hover:text-white focus:outline-none focus:ring focus:border-blue-300 text-white">
-            Register
+            Update
           </button>
         </form>
         <div className="mt-4 text-center">
           <p className="text-gray-700 dark:text-gray-300">
-            Already have an account? <Link to="/login" className="dark:text-white hover:underline">Sign in</Link>
+            <Link to="/profile" className="dark:text-white hover:underline">Go back to profile</Link>
           </p>
         </div>
       </div>
@@ -170,4 +188,4 @@ const RegisterComponent = () => {
   );
 };
 
-export default RegisterComponent;
+export default Settings;

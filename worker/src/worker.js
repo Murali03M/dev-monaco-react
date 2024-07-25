@@ -8,7 +8,7 @@ dotenv.config();
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 const JUDGE0_API_URL = process.env.JUDGE0_API_URL || 'https://judge0.chetechs.com/';
-const CALLBACK_URL = process.env.JUDGE0_CALLBACK_URL || 'https://ec16-2a04-4a43-8f0f-f842-3c63-ef13-9a35-e037.ngrok-free.app/api/v1/submission-callback';
+const CALLBACK_URL = process.env.JUDGE0_CALLBACK_URL || 'https://515a-2a04-4a43-8fcf-f6a4-a4fd-30fa-cef7-dde1.ngrok-free.app/api/v1/submission-callback';
 ;
 
 const redisClient = createClient({ url: REDIS_URL });
