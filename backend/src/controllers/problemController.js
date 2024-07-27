@@ -62,7 +62,7 @@ export const createChallenge = async (req, res) => {
             }     
         })
 
-        console.log(languageInfo);
+       
 
     const code = await promisifedReadFile(
       `${MOUNT_PATH}/${problemSlug}/boilerplate/function.${language}`
@@ -108,11 +108,10 @@ export const getChallenges = async (req, res) => {
 // Get a challenge by ID
 export const getChallengeById = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
   try {
     const challenge = await prisma.problem.findUnique({
       where: {
-        id: new ObjectId(String(id))
+        id: id
         
       },
       include: { defaultCode: true }

@@ -22,6 +22,8 @@ const outputMapping = {
 };
 
 export const submissionCallback = async (req, res) => {
+
+  console.log("caleefdkhbjdshbjshdfdv jhsdgfhsdvfhjsdfv");
   try {
     const { token, status, time, memory } = req.body;
     if (!token || !status || !status.description) {

@@ -1,6 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable react/prop-types */
-
 import { useState, useEffect } from "react";
 import CodeEditor from "./CodeEditor";
 import { languageOptions } from "../../constants/languageOptions";
@@ -27,10 +24,14 @@ const Landing = ({ challenge }) => {
   const [testCases, setTestCases] = useState([]);
   const [code, setCode] = useState("");
   const [status, setStatus] = useState("");
+  const [startTime, setStartTime] = useState(null);
 
   const token = localStorage.getItem("token");
 
   useEffect(() => {
+    // Set start time when the component mounts
+    setStartTime(Date.now());
+
     if (challenge?.defaultCode) {
       const defaultCodeObj = challenge.defaultCode.find(
         (code) => code.languageId === language?.value
@@ -50,12 +51,11 @@ const Landing = ({ challenge }) => {
   const onChange = (action, data) => {
     switch (action) {
       case "code": {
-        console.log("data", data);
         setCode(data);
         break;
       }
       default: {
-        console.warn("case not handled!", action, data);
+        toast.error("case not handled!", action, data);
       }
     }
   };
@@ -85,13 +85,17 @@ const Landing = ({ challenge }) => {
           setStatus(SubmitStatus.ACCEPTED);
           setTestCases(response.data.testcases || []);
           toast.success("Accepted!");
-          return;
         } else {
           setStatus(SubmitStatus.REJECTED);
           setTestCases(response.data.testcases || []);
           toast.error("Failed :(");
-          return;
         }
+
+        // Calculate and update accuracy
+        const accuracy = calculateAccuracy(response.data.testcases || []);
+        await updateSubmissionAccuracy(responseId, accuracy);
+
+        return;
       }
     } catch (error) {
       console.error("Polling error:", error);
@@ -101,8 +105,15 @@ const Landing = ({ challenge }) => {
   }
 
   const handleCompile = async () => {
+    if (!startTime) {
+      console.error("Start time is not set");
+      return;
+    }
+
+    const endTime = Date.now();
+    const timeSpent = Math.floor((endTime - startTime) / 1000); // Time spent in seconds
+
     setStatus(SubmitStatus.PENDING);
-    const token = localStorage.getItem("token");
     console.log("Token:", token);
 
     if (!token) {
@@ -118,6 +129,7 @@ const Landing = ({ challenge }) => {
           code: code,
           language: language.name,
           problemId: challenge.id,
+          timeSpent: timeSpent,
         },
         {
           headers: {
@@ -207,7 +219,7 @@ function renderResult(status) {
 }
 
 function TestcaseRender({ testCases }) {
-  console.log("TestcaseRender",testCases);
+  console.log("TestcaseRender", testCases);
   return (
     <div className="grid grid-cols-6 gap-4">
       {testCases.map((testcase, index) => (
@@ -223,3 +235,22 @@ function TestcaseRender({ testCases }) {
     </div>
   );
 }
+
+const calculateAccuracy = (testCases) => {
+  const totalTestCases = testCases.length;
+  const passedTestCases = testCases.filter(testCase => testCase.status === 'AC').length;
+  return (passedTestCases / totalTestCases) * 100; // Accuracy in percentage
+};
+
+const updateSubmissionAccuracy = async (submissionId, accuracy) => {
+  try {
+    await axios.patch(`${BACKEND_URL}/api/v1/submissions/${submissionId}`, { accuracy }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    toast.success("Updated submission accuracy successfully");
+  } catch (error) {
+    toast.error("Error updating submission accuracy:", error);
+  }
+};

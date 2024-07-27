@@ -8,6 +8,7 @@ import 'react-calendar-heatmap/dist/styles.css';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { BACKEND_URL } from '../../config';
 import "../../App.css";
+import { AccuracyTimeChart } from "./AccuracyTimeChart";
 
 const TABLE_HEAD = ["Status", "LanguageId", "Memory", "Time", "Submitted At"];
 
@@ -116,8 +117,17 @@ const Profile = () => {
             <div className="h-32 bg-gray-300 rounded animate-pulse"></div>
           </div>
         )}
+       {/* Accuracy and Time Spent Chart */}
+       {submissions.length > 0 && (
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold mb-4 dark:text-white">Accuracy & Time Spent</h3>
+            <AccuracyTimeChart submissions={submissions} />
+          </div>
+        )}
 
         {/* Submissions Table */}
+
+        <h3 className="text-xl font-semibold mb-4 dark:text-white">Submissions</h3>
         {submissions.length > 0 ? (
           <div>
           <Card className="h-full w-full overflow-scroll">

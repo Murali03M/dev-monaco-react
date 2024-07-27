@@ -2,6 +2,7 @@ import prisma from '../../prisma/prismaClient.js';
 import fs from "fs"
 import getProblemDetails from '../utils/problems.js';
 import { createClient } from 'redis';
+import { time } from 'console';
 
 const redisClient = createClient({ url: process.env.REDIS_URL || 'redis://localhost:6379' });
 await redisClient.connect();
@@ -19,7 +20,7 @@ const MOUNT_PATH = "../problems";
 export  const createSubmission = async (req, res) => {
     try {
       console.log(req.body);
-      const { problemId, language, code } = req.body;
+      const { problemId, language, code,timeSpent } = req.body;
       console.log("language in submission", language);
       const userId = req.userId;
   
@@ -49,6 +50,7 @@ export  const createSubmission = async (req, res) => {
           code: code,
           fullCode: problem.fullBoilerplateCode,
           status: "PENDING",
+          timeSpent: timeSpent
         }
       });
         
@@ -153,27 +155,31 @@ export const getSubmission = async (req, res) => {
 
 
 // Update a challenge
-export const updateSubmissions= async (req, res) => {
+export const updateSubmissions = async (req, res) => {
   const { id } = req.params;
-  const {  testCases,memory,time, } = req.body;
+  const { testCases, memory, time, accuracy } = req.body;
 
   try {
-      const challenge = await prisma.submission.update({
-          where: { id: String(id) },
-          data: {
-              testCases,
-              memory,
-              time,
+    // Create an object with only the fields that are provided
+    const updateData = {};
 
-          },
-      });
+    if (testCases !== undefined) updateData.testCases = testCases;
+    if (memory !== undefined) updateData.memory = memory;
+    if (time !== undefined) updateData.time = time;
+    if (accuracy !== undefined) updateData.accuracy = accuracy;
 
-      res.status(200).json(challenge);
+    const challenge = await prisma.submission.update({
+      where: { id: String(id) },
+      data: updateData,
+    });
+
+    res.status(200).json(challenge);
   } catch (error) {
-      console.error('Error updating challenge:', error);
-      res.status(500).json({ error: 'Error updating challenge' });
+    console.error('Error updating challenge:', error);
+    res.status(500).json({ error: 'Error updating challenge' });
   }
 };
+
 
 // Delete a submission
 export const deleteSubmission = async (req, res) => {

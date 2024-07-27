@@ -46,6 +46,8 @@ model Submission {
   testcases        TestCase[]
   memory           Int?
   time             Float?
+  timeSpent        Int?
+  accuracy         Int?
   user             User         @relation(fields: [userId], references: [id])
   language         Language     @relation(fields: [languageId], references: [id])
   problem          Problem      @relation(fields: [problemId], references: [id])
