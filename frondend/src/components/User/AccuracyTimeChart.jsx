@@ -12,7 +12,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const calculateMean = (data) => {
   const total = data.reduce((sum, value) => sum + value, 0);
-  return total / data.length;
+  return (total / data.length);
 };
 
 export const AccuracyTimeChart = ({ submissions }) => {

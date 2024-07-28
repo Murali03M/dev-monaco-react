@@ -244,7 +244,7 @@ const calculateAccuracy = (testCases) => {
 
 const updateSubmissionAccuracy = async (submissionId, accuracy) => {
   try {
-    await axios.patch(`${BACKEND_URL}/api/v1/submissions/${submissionId}`, { accuracy }, {
+    await axios.put(`${BACKEND_URL}/api/v1/submissions/${submissionId}`, { accuracy }, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
