@@ -4,75 +4,100 @@ import { Link, useNavigate } from 'react-router-dom';
 import { BACKEND_URL } from '../../config';
 import SearchBar from './SearchBar';
 import Filter from './Filter';
+import Footer from '../../pages/footer';
 
 const ChallengeList = () => {
   const [challenges, setChallenges] = useState([]);
+  const [user, setUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('All');
   const [loading, setLoading] = useState(true);
-
-  
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchChallenges = async () => {
+    const fetchUserAndChallenges = async () => {
+      setLoading(true);
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/v1/challenges`);
-        setChallenges(response.data);
-        setLoading(false);
+        const [userResponse, challengesResponse] = await Promise.all([
+          token ? axios.get(`${BACKEND_URL}/api/v1/user`, { headers: { Authorization: `Bearer ${token}` } }) : Promise.resolve({ data: null }),
+          axios.get(`${BACKEND_URL}/api/v1/challenges`)
+        ]);
+
+        setUser(userResponse.data);
+        setChallenges(challengesResponse.data.map(challenge => ({
+          ...challenge,
+          tags: challenge.tags || [] // Ensure tags are always an array
+        })));
       } catch (error) {
-        console.error(error);
-        setLoading(false);
+        console.error('Error fetching data:', error);
       }
+      setLoading(false);
     };
 
-    fetchChallenges();
-  }, []);
+    fetchUserAndChallenges();
+  }, [token]);
 
-  const handleSearch = (term) => {
-    setSearchTerm(term);
+  const handleSearch = (term) => setSearchTerm(term);
+  const handleFilter = (category) => setFilter(category);
+
+  const filteredAndSortedChallenges = () => {
+    return challenges.filter(challenge => {
+      const matchesSearch = challenge.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            challenge.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            challenge.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      const matchesFilter = filter === 'All' || challenge.difficulty === filter;
+
+      return matchesSearch && matchesFilter;
+    }).sort((a, b) => {
+      const aMatch = user?.interests?.some(interest => a.tags.includes(interest)) || false;
+      const bMatch = user?.interests?.some(interest => b.tags.includes(interest)) || false;
+      const aSkillMatch = a.difficulty === user?.skillLevel;
+      const bSkillMatch = b.difficulty === user?.skillLevel;
+
+      if (aMatch && !bMatch) return -1;
+      if (!aMatch && bMatch) return 1;
+      if (aSkillMatch && !bSkillMatch) return -1;
+      if (!aSkillMatch && bSkillMatch) return 1;
+      return 0;
+    });
   };
-
-  const handleFilter = (category) => {
-    setFilter(category);
-  };
-
-  const filteredChallenges = challenges.filter((challenge) => {
-    const matchesSearch = challenge.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          challenge.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          challenge.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesFilter = filter === 'All' || challenge.difficulty === filter;
-
-    return matchesSearch && matchesFilter;
-  });
 
   return (
+    <div>
     <section className="bg-gray-100 dark:bg-gray-900 py-8 md:py-12 min-h-screen">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-6">
           <h2 className="text-2xl font-bold mb-2">Challenges</h2>
-          <p className="text-gray-500 dark:text-gray-400">
-            Explore our collection of programming challenges.
-          </p>
+          <p className="text-gray-500 dark:text-gray-400">Explore our collection of programming challenges tailored to your interests and skill level.</p>
         </div>
         <div className="mb-4">
           <SearchBar onSearch={handleSearch} />
           <Filter onFilter={handleFilter} />
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {loading ? (
-            [...Array(6)].map((_, index) => (
-              <ChallengeCardSkeleton key={index} />
-            ))
-          ) : (
-            filteredChallenges.map((challenge) => (
-              <ChallengeCard challenge={challenge} key={challenge.id} />
-            ))
-          )}
-        </div>
+        {loading ? (
+          [...Array(6)].map((_, index) => <ChallengeCardSkeleton key={index} />)
+        ) : (
+          <div>
+              {filteredAndSortedChallenges().length > 0 ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredAndSortedChallenges().map((challenge) => <ChallengeCard challenge={challenge} key={challenge.id} />)}
+              </div>
+            ) : (
+              <div className="text-center py-10">
+                <p>No challenges match your current interests or proficiency level.</p>
+                <p>Please <Link to="/settings" className="text-blue-500 hover:underline">update your interests or proficiency</Link> to see more relevant challenges.</p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
-    </section>
+   
+      </section>
+      <Footer/>
+      </div>
   );
 };
+
 
 
 

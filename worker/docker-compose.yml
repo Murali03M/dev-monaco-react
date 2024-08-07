@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  redis:
+    image: 'redis:latest'
+    container_name: redis
+    ports:
+      - '6379:6379'
+
+  worker:
+    build: .
+    container_name: worker
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - JUDGE0_API_URL=https://judge0.chetechs.com/
+      - JUDGE0_CALLBACK_URL=https://c772-2a04-4a43-8f6f-f44b-4003-839e-d89b-d651.ngrok-free.app/api/v1/submission-callback
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    volumes:
+      - .:/usr/src/app
+    command: yarn start
+   
+

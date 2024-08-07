@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import ChallengeStatement from './ChallengeStatement';
 import ChallengeSubmitBar from './ChallengeSubmitBar';
 import { BACKEND_URL } from '../../config';
+import Footer from '../../pages/footer';
 
 const ChallengeDetail = () => {
 
@@ -32,6 +33,7 @@ const ChallengeDetail = () => {
   }
 
   return (
+    <div>
     <div className="flex flex-col min-h-screen">
       <main className="flex-1 py-2 md:py-6 grid md:grid-cols-2 gap-2">
         <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 ">
@@ -39,7 +41,9 @@ const ChallengeDetail = () => {
         </div>
         <ChallengeSubmitBar challenge={challenge} />
       </main>
-    </div>
+      </div>
+      <Footer/>
+      </div>
   );
 };
 

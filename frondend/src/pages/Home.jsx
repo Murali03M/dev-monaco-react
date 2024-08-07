@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import Footer from "./footer";
 
 
 const Home = () => {
 
   const navigate =useNavigate()
   return (
+    <div>
     <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900">
      <div>
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Welcome to the Challenge Platform</h1>
@@ -13,6 +15,8 @@ const Home = () => {
 
         </div>
       </div>
+      </div>
+      <Footer/>
     </div>
   );
 };

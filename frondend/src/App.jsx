@@ -10,58 +10,27 @@ import Login from './pages/Login';
 import ProtectedRoute from './components/Protect/ProtectedRoute';
 import Settings from './components/User/Settings';
 import ResetPassword from './components/Auth/ResetPassword';
+import Footer from './pages/footer';
+import SurveyForm from './components/survey/Survey';
+
 
 const App = () => {
   return (
     <Router>
       <Layout>
-     
         <Routes>
-           <Route path="/" element={<Home />} /> 
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/resetPasssword" element={<ResetPassword />} />
-          <Route
-            path="/challenges"
-            element={
-              <ProtectedRoute>
-                <ChallengeList />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/challenges/:id"
-            element={
-              <ProtectedRoute>
-                <ChallengeDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/create-challenge"
-            element={
-              <ProtectedRoute>
-                <CreateChallenge />
-              </ProtectedRoute>
-            }
-          />
-           <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/resetPassword" element={<ResetPassword />} />
+          <Route path="/challenges" element={<ProtectedRoute><ChallengeList /></ProtectedRoute>} />
+          <Route path="/challenges/:id" element={<ProtectedRoute><ChallengeDetail /></ProtectedRoute>} />
+          <Route path="/create-challenge" element={<ProtectedRoute><CreateChallenge /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/survey" element={<ProtectedRoute><SurveyForm /></ProtectedRoute>} />
         </Routes>
+     
       </Layout>
     </Router>
   );

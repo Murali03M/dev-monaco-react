@@ -1,11 +1,16 @@
 {
   "name": "worker",
   "version": "1.0.0",
-  "main": "wroker.js",
+  "main": "src/worker.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon ./src/worker.js"
+    "start": "node ./src/worker.js",
+    "generate": "yarn prisma generate"
   },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
+  },
+
   "keywords": [],
   "author": "",
   "license": "ISC",

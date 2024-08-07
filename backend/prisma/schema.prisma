@@ -30,6 +30,8 @@ model User {
   createdAt   DateTime     @default(now())
   role        UserRole     @default(USER)
   submissions Submission[]
+  surveyResponses SurveyResponse[] // Add this line
+
   updatedAt   DateTime     @updatedAt
 }
 
@@ -88,6 +90,24 @@ model DefaultCode {
   language    Language      @relation(fields: [languageId], references: [id])
   @@unique([problemId, languageId])
 }
+
+
+model SurveyResponse {
+  id                      String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId                  String   
+  satisfaction            String
+  difficulty              String
+  learningImpact          String
+  profileUsefulness       String
+  feedbackUsefulness      String
+  recommendationUsefulness String
+  navigation              String
+  support                 String
+  suggestions             String
+  user             User         @relation(fields: [userId], references: [id])
+  createdAt               DateTime  @default(now())
+}
+
 
 model Problem {
   id            String            @id @default(auto()) @map("_id") @db.ObjectId
