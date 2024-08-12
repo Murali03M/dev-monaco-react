@@ -1,6 +1,16 @@
 ## Merge Sorted Arrays
 
-Merge two sorted arrays into one sorted array.
+Given two sorted arrays, your task is to merge them into one sorted array.
+
+### Problem Statement
+
+You are given two sorted arrays. Write a function that merges these two arrays into one sorted array.
+
+#### Input
+- Two sorted arrays.
+
+#### Output
+- A single sorted array containing all elements from the two input arrays.
 
 
 #### Test case 1

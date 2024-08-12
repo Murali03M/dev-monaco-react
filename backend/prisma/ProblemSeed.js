@@ -42,7 +42,7 @@ async function main(problemSlug, problemTitle) {
 
   await Promise.all(
       Object.keys(LANGUAGE_MAPPING).map(async (language) => {
-          console.log(LANGUAGE_MAPPING[language].name);
+        
           const languageInfo = await prisma.language.findFirst({
               where: {
                 
@@ -50,7 +50,7 @@ async function main(problemSlug, problemTitle) {
               }     
           })
 
-          console.log(languageInfo);
+       
 
       const code = await promisifedReadFile(
         `${MOUNT_PATH}/${problemSlug}/boilerplate/function.${language}`

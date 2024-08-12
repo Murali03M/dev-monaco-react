@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { BACKEND_URL } from '../../config';
+import { notify } from '../NotificationProvider/NotificationUtils';
 
 const CreateChallenge = () => {
   const [problemSlug, setProblemSlug] = useState('');
@@ -20,9 +21,18 @@ const CreateChallenge = () => {
         difficulty,
         tag
       });
-      console.log(response.data);
+      if (response.status == 200)
+      {
+        notify.success(response.data.message);
+        setProblemSlug('');
+        setProblemTitle('');
+        setDifficulty('EASY')
+        setTag([]);
+        setTagInput("")
+      }
+    
     } catch (error) {
-      console.error(error);
+      notify.error(error.message);
     }
   };
 

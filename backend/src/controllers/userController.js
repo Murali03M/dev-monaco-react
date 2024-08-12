@@ -28,7 +28,6 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(req.body);
 
     const user = await prisma.user.findUnique({ where: { email } });
 
@@ -102,14 +101,14 @@ export const updateUser = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
 
-  console.log("welcome");
+
   const { email, password } =req.body;
   try {
 
     let user = await prisma.user.findFirst({
       where:{email:email}
     })
-    console.log("userdfgdfg",user);
+
     if (user)
     {
       const hashedPassword = await bcrypt.hash(password, 10);

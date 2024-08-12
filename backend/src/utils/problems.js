@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const MOUNT_PATH = path.join(__dirname, '../../../problems')
 
 export default async function getProblemDetails({ slug, languageId }) {
-   console.log("Langugae",languageId);
+ 
   if (!SUPPORTED_LANGS.includes(languageId)) {
     throw new Error(`Unsupported language: ${languageId}`);
   }

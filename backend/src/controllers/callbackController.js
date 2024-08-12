@@ -23,7 +23,7 @@ const outputMapping = {
 
 export const submissionCallback = async (req, res) => {
 
-  console.log("caleefdkhbjdshbjshdfdv jhsdgfhsdvfhjsdfv");
+
   try {
     const { token, status, time, memory } = req.body;
     if (!token || !status || !status.description) {
@@ -39,7 +39,7 @@ export const submissionCallback = async (req, res) => {
       },
     });
 
-    console.log(testCase);
+  
     if (!testCase) {
       return res.status(404).json({ message: "Test case not found" });
     }

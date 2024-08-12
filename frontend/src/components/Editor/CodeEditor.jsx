@@ -9,7 +9,6 @@ const CodeEditor = ({ onChange, language, code, theme, challenge }) => {
   useEffect(() => {
     if (challenge?.defaultCode) {
       const defaultCodeObj = challenge.defaultCode.find((code) => code.languageId === language);
-      console.log("defaultCodeObj",defaultCodeObj);
       if (defaultCodeObj) {
         setValue(defaultCodeObj.code);    
       }

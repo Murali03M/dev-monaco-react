@@ -7,6 +7,7 @@ import challengeRoutes from './routes/problemRoutes.js';
 import submissionRoutes from './routes/submissionRoutes.js';
 import callbackRoutes from './routes/callbackRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import surveyRoutes from './routes/surveyRoutes.js';
 const app = express();
 
 app.use(cors());
@@ -19,5 +20,6 @@ app.use('/api/v1', userRoutes);
 // app.use('/api/v1/judge0', judge0Routes);
 app.use('/api/v1', submissionRoutes);
 app.use('/api/v1', callbackRoutes);
+app.use('/api/v1',surveyRoutes)
 
 export default app;

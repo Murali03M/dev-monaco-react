@@ -29,7 +29,6 @@ const Navbar = () => {
     fetchUserDetails();
   }, [token]);
 
-  console.log("user", user);
 
   const logOutHandler = () => {
     localStorage.removeItem('token');

@@ -32,10 +32,10 @@ const LoginComponent = () => {
 
       const response = await axios.post(`${BACKEND_URL}/api/v1/auth/login`, { email, password });
       if (response.data.token) {
-        console.log(response.data.expiresIn);
+        
         const expiresAt = new Date().getTime() + parseInt(response.data.expiresIn,10) * 1000;
         localStorage.setItem('token', response.data.token);
-        console.log(expiresAt);
+
         localStorage.setItem('expiresAt', expiresAt.toString());
 
         notify.success("Login successful");

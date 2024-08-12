@@ -23,7 +23,6 @@ const ResetPassword = () => {
         result.error.errors.forEach(err => notify.error(err.message));
         return;
       }
-      console.log("res",result);
       const response = await axios.patch(`${BACKEND_URL}/api/v1/auth/reset-password`,result.data);
 
       notify.success(response.data.message);

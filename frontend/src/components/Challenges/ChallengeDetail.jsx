@@ -18,7 +18,6 @@ const ChallengeDetail = () => {
     const fetchChallenge = async () => {
       try {
         const response = await axios.get(`${BACKEND_URL}/api/v1/challenges/${id}`);
-        console.log(response.data);
         setChallenge(response.data);
       } catch (error) {
         console.error(error);

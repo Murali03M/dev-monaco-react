@@ -29,13 +29,11 @@ const main = async () => {
   console.log('Worker started, waiting for tasks...');
 
   redisClient.subscribe('submissions', async (message) => {
-    console.log(message);
     const submissionData = JSON.parse(message);
     const { submissionId, code, language, inputs, outputs } = submissionData;
    
     try {
       const languageId = LANGUAGE_MAPPING[language];
-      console.log(languageId);
       if (!languageId) {
         throw new Error(`Unsupported language: ${language}`);
 
@@ -54,9 +52,7 @@ const main = async () => {
       })),
     },
   );
-     console.log(response);
       const tokens = response.data.map(res => res.token);
-      console.log("token",tokens);
       await Promise.all(
         tokens.map((token, index) => 
           prisma.testCase.updateMany({

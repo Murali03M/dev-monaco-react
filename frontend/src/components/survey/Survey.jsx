@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { BACKEND_URL } from '../../config';
+import { notify } from '../NotificationProvider/NotificationUtils';
 
 const SurveyForm = () => {
   const [responses, setResponses] = useState({
@@ -14,6 +16,8 @@ const SurveyForm = () => {
     suggestions: '',
   });
 
+  const token = localStorage.getItem('token');
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setResponses({
@@ -25,12 +29,29 @@ const SurveyForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('YOUR_BACKEND_ENDPOINT/survey', responses);
-      console.log('Survey Submitted: ', response.data);
-      alert('Thank you for your feedback!');
+      const response = await axios.post(`${BACKEND_URL}/api/v1/survey`, responses, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.status === 201)
+      {
+        notify.success('Thank you for your feedback!');
+        setResponses({
+          satisfaction: '',
+          difficulty: '',
+          learningImpact: '',
+          profileUsefulness: '',
+          feedbackUsefulness: '',
+          recommendationUsefulness: '',
+          navigation: '',
+          support: '',
+          suggestions: '',
+        })
+      } else {
+        notify.error('Failed to submit feedback. Please try again.');
+      }
+      
     } catch (error) {
-      console.error('Failed to submit survey:', error);
-      alert('Failed to submit feedback. Please try again.');
+      notify.error('Failed to submit feedback. Please try again.');
     }
   };
 

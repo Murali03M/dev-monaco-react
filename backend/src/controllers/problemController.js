@@ -54,7 +54,7 @@ export const createChallenge = async (req, res) => {
         
   await Promise.all(
     Object.keys(LANGUAGE_MAPPING).map(async (language) => {
-        console.log(LANGUAGE_MAPPING[language].name);
+       
         const languageInfo = await prisma.language.findFirst({
             where: {
               

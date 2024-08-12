@@ -61,7 +61,6 @@ const Landing = ({ challenge }) => {
   };
 
   async function pollWithBackoff(responseId, retries) {
-    console.log("responseId", responseId);
     if (retries === 0) {
       setStatus("SUBMIT");
       toast.error("Not able to get status");
@@ -70,7 +69,6 @@ const Landing = ({ challenge }) => {
 
     try {
       const response = await axios.get(`${BACKEND_URL}/api/v1/submission/${responseId}`);
-      console.log("getresponse", response.data);
 
       if (!response.data || !response.data.status) {
         throw new Error("Invalid response structure");
@@ -114,7 +112,6 @@ const Landing = ({ challenge }) => {
     const timeSpent = Math.floor((endTime - startTime) / 1000); // Time spent in seconds
 
     setStatus(SubmitStatus.PENDING);
-    console.log("Token:", token);
 
     if (!token) {
       console.error("No token found");
@@ -137,7 +134,6 @@ const Landing = ({ challenge }) => {
           },
         }
       );
-      console.log("response", response.data);
 
       pollWithBackoff(response.data.submission.id, 10);
     } catch (error) {
@@ -219,7 +215,6 @@ function renderResult(status) {
 }
 
 function TestcaseRender({ testCases }) {
-  console.log("TestcaseRender", testCases);
   return (
     <div className="grid grid-cols-6 gap-4">
       {testCases.map((testcase, index) => (

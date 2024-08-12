@@ -16,7 +16,7 @@ import {  Submissions } from './Submission';
 const ChallengeSubmitBar = ({ challenge }) => {
   
 
-  console.log("ChallengeSubmitBar",challenge);
+ 
  
   const [activeTab, setActiveTab] = useState("submit");
   

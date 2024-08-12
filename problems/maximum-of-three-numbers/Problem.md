@@ -1,6 +1,16 @@
 ## Maximum of Three Numbers
 
-Find the maximum of three given numbers.
+Write a function that takes three integers and returns the maximum of the three numbers.
+
+### Problem Statement
+
+Given three numbers, your task is to find and return the maximum number among them.
+
+#### Input
+- Three integers.
+
+#### Output
+- The largest of the three integers.
 
 
 #### Test case 1

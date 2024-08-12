@@ -19,9 +19,9 @@ const MOUNT_PATH = "../problems";
   
 export  const createSubmission = async (req, res) => {
     try {
-      console.log(req.body);
+     
       const { problemId, language, code,timeSpent } = req.body;
-      console.log("language in submission", language);
+     
       const userId = req.userId;
   
       const dbProblem = await prisma.problem.findUnique({
@@ -34,7 +34,6 @@ export  const createSubmission = async (req, res) => {
         return res.status(404).json({ error: 'Problem not found' });
       }
   
-      console.log("Calling getProblemDetails with slug:", dbProblem.slug, "and languageId:", language);
       const problem = await getProblemDetails({ slug: dbProblem.slug, languageId: language });
   
       problem.fullBoilerplateCode = problem.fullBoilerplateCode.replace(
