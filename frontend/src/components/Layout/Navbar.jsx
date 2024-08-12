@@ -1,19 +1,41 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu } from '@headlessui/react';
 import ThemeProvider from '../ThemeProvider/ThemeProvider';
+import { BACKEND_URL } from '../../config';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Navbar = () => {
-
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
-
-  // eslint-disable-next-line no-undef
+  
   const token = localStorage.getItem('token');
+  
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        if (token) {
+          const response = await axios.get(`${BACKEND_URL}/api/v1/user`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          setUser(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+      }
+    };
+
+    fetchUserDetails();
+  }, [token]);
+
+  console.log("user", user);
 
   const logOutHandler = () => {
-    // eslint-disable-next-line no-undef
     localStorage.removeItem('token');
+    setUser(null);
     navigate('/login');
-  }
+  };
 
   return (
     <nav className="bg-white dark:bg-gray-800 shadow">
@@ -42,7 +64,7 @@ const Navbar = () => {
                   </Link>
                 )}
               </div>
-              {token && (
+              {user && (
                 <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5">
                   <Menu.Item>
                     {({ active }) => (
@@ -64,10 +86,24 @@ const Navbar = () => {
                           active ? 'bg-gray-100 dark:bg-gray-600' : ''
                         }`}
                       >
-                        settings
+                        Settings
                       </Link>
                     )}
                   </Menu.Item>
+                  {user.role === "ADMIN" && (
+                    <Menu.Item>
+                      {({ active }) => (
+                        <Link
+                          to="/create-challenge"
+                          className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 ${
+                            active ? 'bg-gray-100 dark:bg-gray-600' : ''
+                          }`}
+                        >
+                          Create Challenge
+                        </Link>
+                      )}
+                    </Menu.Item>
+                  )}
                   <Menu.Item>
                     {({ active }) => (
                       <div
