@@ -28,7 +28,6 @@ Output
 ```
 120
 ```
-
 #### Test case 2
 
 Input
